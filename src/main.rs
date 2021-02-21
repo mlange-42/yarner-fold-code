@@ -1,6 +1,10 @@
+use once_cell::sync::Lazy;
+use regex::Regex;
 use std::error::Error;
 use yarner_lib::Node::Text;
 use yarner_lib::{Node, TextBlock};
+
+pub static CLEAN_LINK_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"[^a-zA-Z0-9]").unwrap());
 
 fn main() {
     std::process::exit(match run() {
@@ -26,7 +30,11 @@ fn run() -> Result<(), Box<dyn Error>> {
                     idx,
                     Text(TextBlock {
                         text: vec![
-                            format!("<details><summary>{}</summary>", name),
+                            format!(
+                                "<details><summary>{}{}</summary>",
+                                format_anchor(&name),
+                                name
+                            ),
                             String::new(),
                         ],
                     }),
@@ -47,4 +55,16 @@ fn run() -> Result<(), Box<dyn Error>> {
     let out_json = yarner_lib::to_json(&config, &documents)?;
     println!("{}", out_json);
     Ok(())
+}
+
+fn block_link(name: &str) -> String {
+    format!(
+        "yarner-block-{}",
+        &CLEAN_LINK_REGEX.replace_all(&name.to_lowercase(), "-")
+    )
+}
+
+fn format_anchor(name: &str) -> String {
+    let block_link = block_link(name);
+    format!("<a name=\"{}\" id=\"{}\"></a>", block_link, block_link)
 }
