@@ -1,0 +1,21 @@
+language: rust
+env:
+  global:
+    - REPO=yarner-fold-code
+
+os:
+  - linux
+
+rust:
+  - stable
+
+branches:
+  only:
+    - main
+    - "/^\\d+\\.\\d+\\.\\d+/"
+
+script:
+  - rustup component add rustfmt clippy
+  - cargo fmt -- --check
+  - cargo clippy --all-targets -- --deny warnings
+  - cargo test --verbose
