@@ -7,4 +7,4 @@ edition = "2018"
 [dependencies]
 regex = "1.4"
 once_cell = "1.5"
-yarner-lib = { git = "https://github.com/mlange-42/yarner.git", rev = "54488e6" }
+yarner-lib = { git = "https://github.com/mlange-42/yarner.git", rev = "e6a0e5d" }

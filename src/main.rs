@@ -1,8 +1,7 @@
 use once_cell::sync::Lazy;
 use regex::Regex;
 use std::error::Error;
-use yarner_lib::Node::Text;
-use yarner_lib::{Node, TextBlock};
+use yarner_lib::{Context, Node, TextBlock};
 
 pub static CLEAN_LINK_REGEX: Lazy<Regex> = Lazy::new(|| Regex::new(r"[^a-zA-Z0-9]").unwrap());
 
@@ -17,7 +16,9 @@ fn main() {
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
-    let (config, mut documents) = yarner_lib::parse_input(std::io::stdin())?;
+    let (context, mut documents) = yarner_lib::parse_input()?;
+
+    check_version(&context);
 
     for (_path, doc) in documents.iter_mut() {
         let mut idx = 0;
@@ -28,7 +29,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
                 doc.nodes.insert(
                     idx,
-                    Text(TextBlock {
+                    Node::Text(TextBlock {
                         text: vec![
                             format!(
                                 "<details><summary>{}{}</summary>",
@@ -43,7 +44,7 @@ fn run() -> Result<(), Box<dyn Error>> {
 
                 doc.nodes.insert(
                     idx + 1,
-                    Text(TextBlock {
+                    Node::Text(TextBlock {
                         text: vec!["</details>".to_string()],
                     }),
                 );
@@ -52,9 +53,20 @@ fn run() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    let out_json = yarner_lib::to_json(&config, &documents)?;
-    println!("{}", out_json);
+    yarner_lib::write_output(&documents)?;
     Ok(())
+}
+
+pub fn check_version(context: &Context) {
+    if context.yarner_version != yarner_lib::YARNER_VERSION {
+        eprintln!(
+            "  Warning: The {} plugin was built against version {} of Yarner, \
+                    but we're being called from version {}",
+            context.name,
+            yarner_lib::YARNER_VERSION,
+            context.yarner_version
+        )
+    }
 }
 
 fn block_link(name: &str) -> String {
