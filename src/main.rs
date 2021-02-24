@@ -16,11 +16,11 @@ fn main() {
 }
 
 fn run() -> Result<(), Box<dyn Error>> {
-    let (context, mut documents) = yarner_lib::parse_input()?;
+    let mut data = yarner_lib::parse_input()?;
 
-    check_version(&context);
+    check_version(&data.context);
 
-    for (_path, doc) in documents.iter_mut() {
+    for (_path, doc) in data.documents.iter_mut() {
         let mut idx = 0;
 
         while idx < doc.nodes.len() {
@@ -53,7 +53,7 @@ fn run() -> Result<(), Box<dyn Error>> {
         }
     }
 
-    yarner_lib::write_output(&documents)?;
+    yarner_lib::write_output(&data)?;
     Ok(())
 }
 
