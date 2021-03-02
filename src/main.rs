@@ -1,5 +1,6 @@
 use once_cell::sync::Lazy;
 use regex::Regex;
+use std::collections::HashSet;
 use std::error::Error;
 use yarner_lib::{Context, Node, TextBlock};
 
@@ -17,37 +18,80 @@ fn main() {
 
 fn run() -> Result<(), Box<dyn Error>> {
     let mut data = yarner_lib::parse_input()?;
+    let config = &data.context.config;
 
     check_version(&data.context);
+
+    let min_lines = config
+        .get("min-lines")
+        .and_then(|s| s.as_integer())
+        .unwrap_or(0);
+
+    let languages: HashSet<String> = match config.get("languages") {
+        None => HashSet::new(),
+        Some(v) => v
+            .as_array()
+            .map(|arr| {
+                arr.iter()
+                    .map(|l| l.as_str().unwrap_or_default().to_lowercase())
+            })
+            .ok_or("Can't parse array of languages")?
+            .collect(),
+    };
+
+    let ignore_languages: HashSet<String> = match config.get("ignore-languages") {
+        None => HashSet::new(),
+        Some(v) => v
+            .as_array()
+            .map(|arr| {
+                arr.iter()
+                    .map(|l| l.as_str().unwrap_or_default().to_lowercase())
+            })
+            .ok_or("Can't parse array of ignored languages")?
+            .collect(),
+    };
 
     for (_path, doc) in data.documents.iter_mut() {
         let mut idx = 0;
 
         while idx < doc.nodes.len() {
             if let Node::Code(block) = &doc.nodes[idx] {
-                let name = block.name.clone().unwrap_or_else(|| "unnamed".to_string());
+                let lang = block
+                    .language
+                    .as_ref()
+                    .map(|l| l.to_lowercase())
+                    .unwrap_or_else(|| "".to_string());
 
-                doc.nodes.insert(
-                    idx,
-                    Node::Text(TextBlock {
-                        text: vec![
-                            format!(
-                                "<details><summary>{}{}</summary>",
-                                format_anchor(&name),
-                                name
-                            ),
-                            String::new(),
-                        ],
-                    }),
-                );
-                idx += 1;
+                let num_lines = block.source.len() + if block.is_unnamed { 0 } else { 1 };
 
-                doc.nodes.insert(
-                    idx + 1,
-                    Node::Text(TextBlock {
-                        text: vec!["</details>".to_string()],
-                    }),
-                );
+                if (languages.is_empty() || languages.contains(&lang))
+                    && !ignore_languages.contains(&lang)
+                    && num_lines as i64 >= min_lines
+                {
+                    let name = block.name.clone().unwrap_or_else(|| "unnamed".to_string());
+
+                    doc.nodes.insert(
+                        idx,
+                        Node::Text(TextBlock {
+                            text: vec![
+                                format!(
+                                    "<details><summary>{}{}</summary>",
+                                    format_anchor(&name),
+                                    name
+                                ),
+                                String::new(),
+                            ],
+                        }),
+                    );
+                    idx += 1;
+
+                    doc.nodes.insert(
+                        idx + 1,
+                        Node::Text(TextBlock {
+                            text: vec!["</details>".to_string()],
+                        }),
+                    );
+                }
             }
             idx += 1;
         }

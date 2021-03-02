@@ -1,6 +1,8 @@
 # yarner-fold-code
 
-A [Yarner](https://github.com/mlange-42/yarner) pre-processor that puts all code blocks into collapsed `<details>` tags.
+[![Build Status](https://travis-ci.com/mlange-42/yarner-fold-code.svg?branch=main)](https://travis-ci.com/mlange-42/yarner-fold-code)
+
+A [Yarner](https://github.com/mlange-42/yarner) plugin that puts all code blocks into collapsed `<details>` tags.
 
 Example:
 
@@ -35,8 +37,25 @@ fn main() {
 
 ## Usage
 
-Add a section `preprocessor.fold-code` to your `Yarner.toml`:
+Add a section `plugin.fold-code` to your `Yarner.toml`:
 
 ```toml
-[preprocessor.fold-code]
+[plugin.fold-code]
 ```
+
+## Options
+
+The plugin allows for different options, which are all optional:
+
+```toml
+[plugin.fold-code]
+min-lines = "10"
+languages = ["java", "rust"]
+ignore-languages = ["c", "python"]
+```
+
+| Option             | Details                                               | Default |
+|--------------------|-------------------------------------------------------|---------|
+| `min-lines`        | Do not fold code blocks shorter than that             | `0`     |
+| `languages`        | Only fold code blocks in these languages (if present) | none    |
+| `ignore-languages` | Do not fold code blocks in these languages            | none    |
