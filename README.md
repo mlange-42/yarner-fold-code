@@ -1,6 +1,7 @@
 # yarner-fold-code
 
-[![Tests](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml/badge.svg)](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml)
+[![Test status](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml/badge.svg)](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml)
+[![Crate](https://img.shields.io/crates/v/yarner-fold-code.svg)](https://crates.io/crates/yarner-fold-code)
 
 A [Yarner](https://github.com/mlange-42/yarner) plugin that puts all code blocks into collapsed `<details>` tags.
 
@@ -32,7 +33,7 @@ fn main() {
 **Using `cargo`**
 
 ```
-> cargo install --git https://github.com/mlange-42/yarner-fold-code.git --branch main
+> cargo install yarner-fold-code
 ```
 
 ## Usage

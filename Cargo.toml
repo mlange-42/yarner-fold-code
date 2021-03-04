@@ -1,8 +1,14 @@
 [package]
 name = "yarner-fold-code"
-version = "0.2.0"
+version = "0.2.1"
 authors = ["Martin Lange <martin_lange_@gmx.net>"]
+readme = "README.md"
+description = "A Yarner plugin that puts all code blocks into collapsed `<details>` tags"
+homepage = "https://github.com/mlange-42/yarner-fold-code/"
+repository = "https://github.com/mlange-42/yarner-fold-code/"
+license = "MIT"
 edition = "2018"
+exclude = [".github"]
 
 [profile.release]
 panic = "abort"
@@ -13,4 +19,4 @@ codegen-units = 1
 [dependencies]
 regex = "1.4"
 once_cell = "1.5"
-yarner-lib = { git = "https://github.com/mlange-42/yarner.git", tag = "0.5.1" }
+yarner-lib = "0.5.2"
