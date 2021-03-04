@@ -1,6 +1,6 @@
 # yarner-fold-code
 
-[![Build Status](https://travis-ci.com/mlange-42/yarner-fold-code.svg?branch=main)](https://travis-ci.com/mlange-42/yarner-fold-code)
+[![Tests](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml/badge.svg)](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml)
 
 A [Yarner](https://github.com/mlange-42/yarner) plugin that puts all code blocks into collapsed `<details>` tags.
 
