@@ -1,6 +1,6 @@
 [package]
 name = "yarner-fold-code"
-version = "0.2.1"
+version = "0.2.2"
 authors = ["Martin Lange <martin_lange_@gmx.net>"]
 readme = "README.md"
 description = "A Yarner plugin that puts all code blocks into collapsed `<details>` tags"
