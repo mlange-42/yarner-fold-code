@@ -1,7 +1,9 @@
 # yarner-fold-code
 
 [![Test status](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml/badge.svg)](https://github.com/mlange-42/yarner-fold-code/actions/workflows/tests.yml)
+[![GitHub](https://img.shields.io/badge/github-repo-blue?logo=github)](https://github.com/mlange-42/yarner-fold-code)
 [![Crate](https://img.shields.io/crates/v/yarner-fold-code.svg)](https://crates.io/crates/yarner-fold-code)
+[![MIT license](https://img.shields.io/github/license/mlange-42/yarner-fold-code)](https://github.com/mlange-42/yarner-fold-code/blob/main/LICENSE)
 
 A [Yarner](https://github.com/mlange-42/yarner) plugin that puts all code blocks into collapsed `<details>` tags.
 

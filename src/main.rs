@@ -56,41 +56,43 @@ fn run() -> Result<(), Box<dyn Error>> {
 
         while idx < doc.nodes.len() {
             if let Node::Code(block) = &doc.nodes[idx] {
-                let lang = block
-                    .language
-                    .as_ref()
-                    .map(|l| l.to_lowercase())
-                    .unwrap_or_else(|| "".to_string());
+                if !block.is_hidden {
+                    let lang = block
+                        .language
+                        .as_ref()
+                        .map(|l| l.to_lowercase())
+                        .unwrap_or_else(|| "".to_string());
 
-                let num_lines = block.source.len() + if block.is_unnamed { 0 } else { 1 };
+                    let num_lines = block.source.len() + if block.is_unnamed { 0 } else { 1 };
 
-                if (languages.is_empty() || languages.contains(&lang))
-                    && !ignore_languages.contains(&lang)
-                    && num_lines as i64 >= min_lines
-                {
-                    let name = block.name.clone().unwrap_or_else(|| "unnamed".to_string());
+                    if (languages.is_empty() || languages.contains(&lang))
+                        && !ignore_languages.contains(&lang)
+                        && num_lines as i64 >= min_lines
+                    {
+                        let name = block.name.clone().unwrap_or_else(|| "unnamed".to_string());
 
-                    doc.nodes.insert(
-                        idx,
-                        Node::Text(TextBlock {
-                            text: vec![
-                                format!(
-                                    "<details><summary>{}{}</summary>",
-                                    format_anchor(&name),
-                                    name
-                                ),
-                                String::new(),
-                            ],
-                        }),
-                    );
-                    idx += 1;
+                        doc.nodes.insert(
+                            idx,
+                            Node::Text(TextBlock {
+                                text: vec![
+                                    format!(
+                                        "<details><summary>{}{}</summary>",
+                                        format_anchor(&name),
+                                        name
+                                    ),
+                                    String::new(),
+                                ],
+                            }),
+                        );
+                        idx += 1;
 
-                    doc.nodes.insert(
-                        idx + 1,
-                        Node::Text(TextBlock {
-                            text: vec!["</details>".to_string()],
-                        }),
-                    );
+                        doc.nodes.insert(
+                            idx + 1,
+                            Node::Text(TextBlock {
+                                text: vec!["</details>".to_string()],
+                            }),
+                        );
+                    }
                 }
             }
             idx += 1;
